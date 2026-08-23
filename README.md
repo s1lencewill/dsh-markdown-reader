@@ -85,8 +85,8 @@ vendor/mermaid/ Mermaid 渲染器（已随包分发，v11.16.1）
 ### 客户端 bundle 契约
 
 DSH 的 client-modules 会把 `exports["./client"]` 指向的文件原样提供到
-`/plugins/ui-dsh-markdown-reader/client.js`（路径来自 `cordis.patch.yml` 的 bundle
-`id`，模块 ID 则仍使用 npm 包名）。文件必须自注册：
+`/plugins/@s1lencewill/dsh-markdown-reader/client.js`（路径与模块 ID 均来自 npm
+包名；`cordis.patch.yml` 中的 `id` 仅用于 Cordis 配置）。文件必须自注册：
 
 ```js
 window.__ModuleLoader__.load({ id: '<包名>', factory: (require) => api })

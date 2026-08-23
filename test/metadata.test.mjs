@@ -27,3 +27,9 @@ test('npm repository metadata points at the public repository', () => {
   assert.equal(packageJson.homepage, 'https://github.com/s1lencewill/dsh-markdown-reader#readme')
   assert.equal(packageJson.bugs?.url, 'https://github.com/s1lencewill/dsh-markdown-reader/issues')
 })
+
+test('README documents the runtime client route derived from the npm package name', async () => {
+  const readme = await readFile(`${root}/README.md`, 'utf8')
+  assert.match(readme, /\/plugins\/@s1lencewill\/dsh-markdown-reader\/client\.js/)
+  assert.doesNotMatch(readme, /\/plugins\/ui-dsh-markdown-reader\/client\.js/)
+})
