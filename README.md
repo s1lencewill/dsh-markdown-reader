@@ -1,4 +1,4 @@
-# `@linxin666/dsh-markdown-reader`
+# `@s1lencewill/dsh-markdown-reader`
 
 DSH Web GUI 的全屏 Markdown 阅读器插件：一个双面（host + client）的 profile bundle，
 零构建、零运行时依赖，热插拔无需任何 dsh 源码改动。
@@ -46,11 +46,11 @@ dsh plugin --profile web add link:G:/hanako/dsh_plu/dsh-markdown-reader
 无 pnpm 的手工方式：
 
 1. 将本目录链接/复制到 profile 的 node_modules：
-   `C:\Users\yxh\.dsh\profiles\web\node_modules\@linxin666\dsh-markdown-reader`
+   `C:\Users\yxh\.dsh\profiles\web\node_modules\@s1lencewill\dsh-markdown-reader`
    （目录联接 `mklink /J` 可让后续源码改动即时生效）
 2. 在 `C:\Users\yxh\.dsh\profiles\web\package.json` 中：
-   - `dependencies` 加入 `"@linxin666/dsh-markdown-reader": "link:..."`（或任意占位）
-   - `dsh.profile.bundles` 追加 `"@linxin666/dsh-markdown-reader"`
+   - `dependencies` 加入 `"@s1lencewill/dsh-markdown-reader": "link:..."`（或任意占位）
+   - `dsh.profile.bundles` 追加 `"@s1lencewill/dsh-markdown-reader"`
 3. 重启 DSH，刷新页面。
 
 ## 架构
@@ -85,7 +85,8 @@ vendor/mermaid/ Mermaid 渲染器（已随包分发，v11.16.1）
 ### 客户端 bundle 契约
 
 DSH 的 client-modules 会把 `exports["./client"]` 指向的文件原样提供到
-`/plugins/@linxin666/dsh-markdown-reader/client.js`。文件必须自注册：
+`/plugins/ui-dsh-markdown-reader/client.js`（路径来自 `cordis.patch.yml` 的 bundle
+`id`，模块 ID 则仍使用 npm 包名）。文件必须自注册：
 
 ```js
 window.__ModuleLoader__.load({ id: '<包名>', factory: (require) => api })
@@ -105,10 +106,13 @@ window.__ModuleLoader__.load({ id: '<包名>', factory: (require) => api })
 ## 测试
 
 ```sh
+npm test                       # 完整测试套件
 node test/engine.test.mjs    # 39 项纯引擎用例（渲染/数学保护/路径解析/清洗白名单/主题）
 node test/katex-e2e.mjs      # 真实 KaTeX 端到端（vendored UMD）
 node test/mermaid-e2e.mjs    # vendored mermaid 加载/API/解析验证
 node test/reapply.test.mjs   # 皮肤切换/HMR 重新 apply 的健壮性（代际隔离）
+node --test test/host.test.mjs      # 宿主路由、工作区门禁与安全响应头
+node --test test/metadata.test.mjs  # 包名、bundle、客户端与文档一致性
 ```
 
 ## 已知边界

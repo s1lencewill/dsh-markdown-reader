@@ -1,5 +1,5 @@
 /**
- * Engine tests for @linxin666/dsh-markdown-reader (browser half, pure parts).
+ * Engine tests for @s1lencewill/dsh-markdown-reader (browser half, pure parts).
  * Run with: node --test test/
  */
 import test from 'node:test'
@@ -363,6 +363,8 @@ test('resolveAssetUrl: absolute / relative / root-relative / escape / suffix', (
 test('resolveRelativeLink: in-document navigation resolution', () => {
   assert.deepEqual(resolveRelativeLink('docs/a.md', '../other.md#sec'), { path: 'other.md', fragment: 'sec' })
   assert.deepEqual(resolveRelativeLink('docs/a.md', 'b.md'), { path: 'docs/b.md', fragment: null })
+  assert.deepEqual(resolveRelativeLink('docs/a.md', 'my%20file.md?v=2#part%201'), { path: 'docs/my file.md', fragment: 'part 1' })
+  assert.deepEqual(resolveRelativeLink('docs/a.md', '..\\other.md'), { path: 'other.md', fragment: null })
   assert.deepEqual(resolveRelativeLink('docs/a.md', '#anchor'), { path: null, fragment: 'anchor' })
   assert.equal(resolveRelativeLink('docs/a.md', '../../../x.md'), null)
 })
@@ -376,7 +378,8 @@ test('path helpers', () => {
   assert.equal(isMarkdownPath('docs/x.md#a?b=1'), true)
   assert.equal(basename('docs/a.md'), 'a.md')
   assert.equal(basename('a.md'), 'a.md')
-  assert.equal(rawUrl('/w dir', 'a b.png', '?v=1'), '/md-reader/raw?root=%2Fw%20dir&path=a%20b.png?v=1')
+  assert.equal(rawUrl('/w dir', 'a b.png', '?v=1'), '/md-reader/raw?root=%2Fw%20dir&path=a%20b.png&v=1')
+  assert.equal(rawUrl('/w', 'a.png', '?v=1#preview'), '/md-reader/raw?root=%2Fw&path=a.png&v=1#preview')
 })
 
 test('table cell helpers', () => {

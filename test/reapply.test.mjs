@@ -82,10 +82,12 @@ const api = captured.factory((id) => {
   throw new Error(`unexpected require ${id}`)
 })
 
+let activeSubscriptions = 0
+
 const makeCtx = () => {
   let disposer = () => {}
   const ctx = {
-    sessions: { list: { getSnapshot: () => ({ current: undefined, byId: {} }), subscribe: () => () => {} } },
+    sessions: { list: { getSnapshot: () => ({ current: undefined, byId: {} }), subscribe: () => { activeSubscriptions += 1; return () => { activeSubscriptions -= 1 } } } },
     effect: (fn) => { disposer = fn() },
   }
   return { ctx, dispose: () => disposer() }
@@ -97,6 +99,8 @@ const check = (name, ok, extra = '') => {
   if (!ok) failed = true
 }
 
+check('loader uses the package.json scope', captured.id === '@s1lencewill/dsh-markdown-reader', captured.id)
+
 // Scenario 1: normal order (dispose before re-apply).
 {
   const a = makeCtx()
@@ -106,6 +110,7 @@ const check = (name, ok, extra = '') => {
   a.dispose()
   check('dispose1 removes the stylesheet', style1.removed === true)
   check('dispose1 clears the window API', sandbox.window.dshMarkdownReader === undefined)
+  check('dispose1 unsubscribes session listener', activeSubscriptions === 0, String(activeSubscriptions))
 }
 
 // Scenario 2: abnormal order (skin switch): apply1 → apply2 → dispose1 late.
@@ -122,9 +127,11 @@ const check = (name, ok, extra = '') => {
   check('stale dispose1 does NOT remove apply2 stylesheet', style2.removed === false)
   check('stale dispose1 does NOT remove apply2 theme sheet', theme2 !== undefined && theme2.removed === false)
   check('stale dispose1 keeps the window API', typeof sandbox.window.dshMarkdownReader === 'object' && sandbox.window.dshMarkdownReader !== null)
+  check('stale dispose1 releases its own subscription', activeSubscriptions === 1, String(activeSubscriptions))
   b.dispose()
   check('dispose2 removes its stylesheet', style2.removed === true)
   check('dispose2 clears the window API', sandbox.window.dshMarkdownReader === undefined)
+  check('dispose2 releases final subscription', activeSubscriptions === 0, String(activeSubscriptions))
 }
 
 console.log(failed ? 'REAPPLY CHECKS FAILED' : 'ALL REAPPLY CHECKS PASS')

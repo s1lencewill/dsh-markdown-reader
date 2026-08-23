@@ -10,4 +10,4 @@
 # reader/client.js) load in the web GUI.
 - insert:
     - id: ui-dsh-markdown-reader
-      name: '@linxin666/dsh-markdown-reader'
+      name: '@s1lencewill/dsh-markdown-reader'
