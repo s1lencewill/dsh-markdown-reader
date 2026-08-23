@@ -1,5 +1,7 @@
 # `@s1lencewill/dsh-markdown-reader`
 
+[简体中文](README.md) | [English](README_EN.md)
+
 DSH Web GUI 的全屏 Markdown 阅读器插件：一个双面（host + client）的 profile bundle，
 零构建、零运行时依赖，热插拔无需任何 dsh 源码改动。
 
@@ -34,6 +36,22 @@ DSH Web GUI 的全屏 Markdown 阅读器插件：一个双面（host + client）
 ### 暖纸主题
 
 ![Markdown 阅读器暖纸主题预览：表格与 KaTeX 数学公式](docs/screenshots/reader-warm-theme.png)
+
+## 为什么采用独立看板
+
+这个阅读器不是用来替代侧边栏，而是为长篇 Markdown 提供一个互补的专注阅读视图。
+它不会修改、降级或恢复 `dsh-better-sidebar`；两者可以同时启用。
+
+| 独立看板的优势 | 实际效果 |
+|---|---|
+| **完整阅读空间** | 使用整个窗口展示正文、宽表格、代码、公式和大图，不受侧边栏宽度限制 |
+| **阅读状态独立** | 阅读器拥有自己的滚动位置、目录高亮、字号、主题与最近文件，不干扰侧边栏状态 |
+| **适合复杂长文档** | 目录与正文可以并排显示，并支持长章节折叠、代码块工具和图片灯箱 |
+| **减少界面挤压** | 阅读时无需持续扩大侧边栏，也不会压缩聊天区、编辑区或其它工作面板 |
+| **低耦合、易维护** | 通过独立浮层和只读路由工作，不侵入侧边栏源码；可单独启用、更新或停用 |
+
+侧边栏更适合文件导航、状态查看和快速操作；独立看板更适合连续阅读、审阅报告及展示
+包含大量公式、表格、代码和图片的文档。
 
 ## 入口
 
@@ -122,7 +140,7 @@ window.__ModuleLoader__.load({ id: '<包名>', factory: (require) => api })
 
 ```sh
 npm test                       # 完整测试套件
-node test/engine.test.mjs    # 39 项纯引擎用例（渲染/数学保护/路径解析/清洗白名单/主题）
+node test/engine.test.mjs    # 纯引擎用例（渲染/数学保护/路径解析/清洗白名单/主题）
 node test/katex-e2e.mjs      # 真实 KaTeX 端到端（vendored UMD）
 node test/mermaid-e2e.mjs    # vendored mermaid 加载/API/解析验证
 node test/reapply.test.mjs   # 皮肤切换/HMR 重新 apply 的健壮性（代际隔离）

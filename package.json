@@ -14,6 +14,8 @@
     "vendor",
     "cordis.patch.yml",
     "README.md",
+    "README_EN.md",
+    "docs/screenshots",
     "LICENSE"
   ],
   "dsh": {
