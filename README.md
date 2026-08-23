@@ -25,6 +25,16 @@ DSH Web GUI 的全屏 Markdown 阅读器插件：一个双面（host + client）
 - **四种主题**：暖纸（象牙底 + 噪点纸纹）/ 清冷（蓝灰）/ 护眼（豆沙绿）/ 素白（GitHub 风），
   头部调色盘按钮循环切换，全局持久化；每种主题自带明暗两套配色，跟随 GUI 主题标记
 
+## 预览效果
+
+### 清冷主题
+
+![Markdown 阅读器清冷主题预览：目录、公式与文档图片](docs/screenshots/reader-cool-theme.png)
+
+### 暖纸主题
+
+![Markdown 阅读器暖纸主题预览：表格与 KaTeX 数学公式](docs/screenshots/reader-warm-theme.png)
+
 ## 入口
 
 | 入口 | 行为 |
