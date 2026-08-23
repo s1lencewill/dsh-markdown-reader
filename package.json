@@ -1,5 +1,5 @@
 {
-  "name": "@linxin666/dsh-markdown-reader",
+  "name": "@s1lencewill/dsh-markdown-reader",
   "description": "DSH Web GUI 全屏 Markdown 阅读器插件：GFM 渲染、大纲目录与滚动定位、KaTeX 数学公式、Mermaid 图表管线（离线优雅降级）、相对图片与文档内跳转。工作区门禁的只读路由；零构建、零运行时依赖（宿主端纯 Node ESM，浏览器端单文件 bundle 复刻 __ModuleLoader__ 契约）。",
   "version": "0.1.0",
   "type": "module",
