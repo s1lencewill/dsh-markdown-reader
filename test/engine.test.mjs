@@ -27,9 +27,26 @@ const {
   indentWidth,
   rawUrl,
   basename,
+  fileMetaChanged,
+  estimateReadingMinutes,
 } = engine
 
 const OPTS = { root: '/work', mdPath: 'docs/a.md' }
+
+test('file metadata comparison detects mtime or size changes', () => {
+  const current = { mtime: 10, size: 20 }
+  assert.equal(fileMetaChanged(current, { mtime: 10, size: 20 }), false)
+  assert.equal(fileMetaChanged(current, { mtime: 11, size: 20 }), true)
+  assert.equal(fileMetaChanged(current, { mtime: 10, size: 21 }), true)
+  assert.equal(fileMetaChanged(null, current), false)
+})
+
+test('reading-time estimate supports Chinese and Latin prose', () => {
+  assert.equal(estimateReadingMinutes(''), 0)
+  assert.equal(estimateReadingMinutes('短文'), 1)
+  assert.equal(estimateReadingMinutes('word '.repeat(221)), 2)
+  assert.equal(estimateReadingMinutes('```js\n' + 'word '.repeat(300) + '\n```'), 0)
+})
 
 test('escapeHtml escapes the five specials', () => {
   assert.equal(escapeHtml(`<a href="x">&'</a>`), '&lt;a href=&quot;x&quot;&gt;&amp;&#39;&lt;/a&gt;')

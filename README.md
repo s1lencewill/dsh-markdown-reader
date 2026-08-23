@@ -17,7 +17,11 @@ DSH Web GUI 的全屏 Markdown 阅读器插件：一个双面（host + client）
   `/md-reader/raw` 提供字节
 - **文档内跳转**：`#锚点` 原生定位；相对 `.md` 链接直接在阅读器内切换文档
 - **阅读体验**：字号调节（12–24px）、目录折叠、刷新、最近文件（按项目持久化）、
-  加载/错误状态、Esc 关闭、焦点圈定
+  阅读进度、预计阅读时间、加载/错误状态、Esc 关闭、焦点圈定
+- **外部更新同步**：每 4 秒通过轻量元数据接口检查当前文件；编辑器或 agent 改写后
+  提示载入新版，也可按项目启用自动重载，并保持当前阅读位置
+- **长文档组件增强**：图片点击放大与下载；代码块复制、折叠和行号；宽表格横向滚动与
+  粘性表头；长章节可就地折叠
 - **四种主题**：暖纸（象牙底 + 噪点纸纹）/ 清冷（蓝灰）/ 护眼（豆沙绿）/ 素白（GitHub 风），
   头部调色盘按钮循环切换，全局持久化；每种主题自带明暗两套配色，跟随 GUI 主题标记
 
@@ -58,6 +62,7 @@ dsh plugin --profile web add link:G:/hanako/dsh_plu/dsh-markdown-reader
 ```
 lib/index.js    宿主端（纯 Node ESM，无依赖）
   - POST /md-reader/read   读取工作区 .md/.markdown/.mdx（4MB 上限，截断标记）
+  - POST /md-reader/stat   仅返回 mtime/size，供外部变更轮询（不读取正文）
   - GET  /md-reader/raw    提供图片等嵌入资源字节（100MB 上限，按扩展名给 MIME）
   - GET  /md-reader/assets/*   vendored 资源（KaTeX JS/CSS/字体、Mermaid drop-in）
   - GET  /aionui-panel/katex/* 与 /aionui-panel/hljs/*  兼容路由（更长前缀遮蔽

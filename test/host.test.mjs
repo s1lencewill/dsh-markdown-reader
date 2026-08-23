@@ -83,6 +83,29 @@ test('host routes enforce workspace boundaries and safe asset responses', async 
     assert.equal(envelope.value.truncated, false)
   })
 
+  await t.test('checks markdown metadata without returning content', async () => {
+    const res = await request(mdRoute, {
+      method: 'POST',
+      url: '/md-reader/stat',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ root: workspace, path: 'docs/readme.md' }),
+    })
+    assert.equal(res.status, 200)
+    const envelope = JSON.parse(res.body.toString('utf8'))
+    assert.equal(envelope.ok, true)
+    assert.equal(typeof envelope.value.mtime, 'number')
+    assert.equal(envelope.value.size, Buffer.byteLength('# Hello\n'))
+    assert.equal('content' in envelope.value, false)
+
+    const escaped = await request(mdRoute, {
+      method: 'POST',
+      url: '/md-reader/stat',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ root: workspace, path: '../outside.md' }),
+    })
+    assert.equal(escaped.status, 403)
+  })
+
   await t.test('rejects path traversal and non-markdown reads', async () => {
     const escaped = await request(mdRoute, {
       method: 'POST',
