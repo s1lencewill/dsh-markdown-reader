@@ -1,0 +1,40 @@
+{
+  "name": "@linxin666/dsh-markdown-reader",
+  "description": "DSH Web GUI 全屏 Markdown 阅读器插件：GFM 渲染、大纲目录与滚动定位、KaTeX 数学公式、Mermaid 图表管线（离线优雅降级）、相对图片与文档内跳转。工作区门禁的只读路由；零构建、零运行时依赖（宿主端纯 Node ESM，浏览器端单文件 bundle 复刻 __ModuleLoader__ 契约）。",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.cjs",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "vendor",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-runtime"
+      ],
+      "platform": "web"
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/dsh-client-runtime": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-host-webserver": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-system-prompt": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-workspace": "^0.1.0-rc.6",
+    "react": "^18.2.0"
+  },
+  "scripts": {
+    "test": "node --test test/"
+  },
+  "license": "BSD-3-Clause"
+}
