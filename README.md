@@ -24,6 +24,8 @@ DSH Web GUI 的全屏 Markdown 阅读器插件：一个双面（host + client）
   提示载入新版，也可按项目启用自动重载，并保持当前阅读位置
 - **长文档组件增强**：图片点击放大与下载；代码块复制、折叠和行号；宽表格横向滚动与
   粘性表头；长章节可就地折叠
+- **打印 / PDF**：打印当前文档的独立副本，展开折叠内容、移除操作控件，使用白底分页排版；
+  保留公式、图表和图片，通过浏览器打印窗口另存 PDF
 - **四种主题**：暖纸（象牙底 + 噪点纸纹）/ 清冷（蓝灰）/ 护眼（豆沙绿）/ 素白（GitHub 风），
   头部调色盘按钮循环切换，全局持久化；每种主题自带明暗两套配色，跟随 GUI 主题标记
 
@@ -63,6 +65,21 @@ DSH Web GUI 的全屏 Markdown 阅读器插件：一个双面（host + client）
 | `window.dshMarkdownReader.open(path)` / CustomEvent `dsh-markdown-reader:open` | 供其它插件/脚本集成 |
 
 打开后可在顶部路径框中输入任意工作区相对路径（Enter 打开），点击目录图标回到选择器。
+
+## 打印与另存 PDF
+
+1. 打开 Markdown 文档，点击顶部 **打印 / PDF**；阅读器打开时也可按 `Ctrl/Cmd + P`。
+2. 等待图片、公式字体和正在渲染的图表准备完成，浏览器会打开打印窗口。
+3. 选择打印机，或将目标设为 **另存为 PDF**，再选择保存位置。
+
+打印只包含当前文档，不包含 DSH 聊天、侧边栏、阅读器工具栏和目录。打印副本中的章节
+和代码块会全部展开；关闭或取消打印后，原来的折叠状态和阅读位置不变。代码长行自动换行，
+表格允许跨页并重复表头，公式和图片按纸张内容宽度适配。深色 Mermaid 图表保留背景以维持对比度。
+
+默认使用浏览器纸张设置和专用页边距，建议 A4 或 Letter；列数很多的表格可选择横向布局。
+浏览器自动添加的页眉、页脚和页码可在打印窗口中调整。文件若被 4 MB 上限截断，打印稿会明确
+注明仅包含已载入部分；失败图片显示占位说明，未完成的公式或图表保留源码。资源等待超时会提示
+重试，不会悄悄输出缺失的内容。此功能不使用服务端 PDF 转换，也不会把文档上传到转换服务。
 
 ## 安装
 
@@ -146,7 +163,14 @@ node test/mermaid-e2e.mjs    # vendored mermaid 加载/API/解析验证
 node test/reapply.test.mjs   # 皮肤切换/HMR 重新 apply 的健壮性（代际隔离）
 node --test test/host.test.mjs      # 宿主路由、工作区门禁与安全响应头
 node --test test/metadata.test.mjs  # 包名、bundle、客户端与文档一致性
+node --test test/print.test.mjs     # 打印资源等待、取消与分页样式回归
+npm run test:print                  # 可选：真实 Chromium 打印副本与 PDF 排版回归
 ```
+
+`test:print` 需开发环境提供 Playwright（不属于插件运行时依赖），默认使用本机 Edge。
+可用 `PRINT_BROWSER_CHANNEL` 或 `PRINT_BROWSER_EXECUTABLE` 指定浏览器，
+`PRINT_TEST_OUTPUT` 指定测试 PDF 目录（默认 `tmp/pdfs/`）。测试拦截系统打印窗口，
+再用相同的打印副本生成 PDF，验证浅色/深色图表、折叠内容、资源失败及取消后的清理。
 
 ## 已知边界
 

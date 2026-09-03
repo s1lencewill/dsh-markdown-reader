@@ -30,6 +30,9 @@ and no changes to DSH source code.
   while preserving the current reading position
 - **Long-document enhancements**: image lightbox and download; code copy, collapse,
   and line numbers; horizontal table scrolling with sticky headers; collapsible long sections
+- **Print / PDF**: prints an isolated copy of the current document with collapsed content
+  expanded, controls removed, and a white paginated layout. Preserves math, diagrams, and
+  images; save as PDF through the browser's print dialog
 - **Four themes**: Warm Paper, Cool, Eye Care, and Plain/GitHub style. Each includes
   light and dark palettes, follows the GUI theme, and persists globally
 
@@ -71,6 +74,25 @@ tables, code, and images.
 
 Once open, enter any workspace-relative path in the header and press Enter. Use the
 folder button to return to the file picker.
+
+## Printing and saving as PDF
+
+1. Open a Markdown document and click **Print / PDF**, or press `Ctrl/Cmd + P` while the reader is open.
+2. Wait for images, math fonts, and in-progress diagrams to prepare. The browser opens its print dialog.
+3. Choose a printer, or select **Save as PDF** and choose a destination.
+
+Only the current document is included: no DSH chat, sidebar, reader toolbar, or outline.
+Sections and code blocks are expanded in the print copy without changing the live reader's
+collapsed state or reading position. Long code lines wrap; tables paginate with repeating
+headers; formulas and images fit the content width. Dark Mermaid diagrams retain their
+background for contrast.
+
+The layout uses browser paper settings and dedicated margins; A4 or Letter is recommended.
+Choose landscape for tables with many columns. Browser-added headers, footers, and page
+numbers are controlled in the print dialog. A document truncated by the 4 MB read cap carries
+a warning that only the loaded portion is included. Failed images have explicit placeholders;
+unfinished formulas and diagrams retain their source. Resource timeouts prompt a retry instead
+of silently printing incomplete content. No server-side PDF converter or document upload is used.
 
 ## Installation
 
@@ -159,7 +181,16 @@ node test/mermaid-e2e.mjs             # Bundled Mermaid loading/API/parser valid
 node test/reapply.test.mjs            # Theme-switch/HMR re-apply generation isolation
 node --test test/host.test.mjs        # Host routes, workspace gate, and security headers
 node --test test/metadata.test.mjs    # Package name, bundle, client, and docs consistency
+node --test test/print.test.mjs       # Resource waiting, cancellation, and pagination styles
+npm run test:print                   # Optional real Chromium print-snapshot/PDF regression
 ```
+
+`test:print` requires Playwright in the development environment, not as a plugin runtime
+dependency. It uses local Edge by default. Set `PRINT_BROWSER_CHANNEL` or
+`PRINT_BROWSER_EXECUTABLE` to select another browser, and `PRINT_TEST_OUTPUT` to choose
+the test PDF directory (default `tmp/pdfs/`). Tests intercept the OS print dialog and generate
+PDFs from the same prepared snapshots, checking light/dark diagrams, collapsed content,
+resource failures, and cancellation cleanup.
 
 ## Known limitations
 

@@ -1,7 +1,7 @@
 {
   "name": "@s1lencewill/dsh-markdown-reader",
-  "description": "DSH Web GUI 全屏 Markdown 阅读器插件：GFM、KaTeX、Mermaid、目录与阅读进度、外部文件变更同步，以及图片/代码/表格/长章节增强。工作区门禁的只读路由；零构建、零运行时依赖。",
-  "version": "0.2.0",
+  "description": "DSH Web GUI 全屏 Markdown 阅读器插件：GFM、KaTeX、Mermaid、目录与阅读进度、外部文件变更同步、图片/代码/表格/长章节增强，以及打印与另存 PDF。工作区门禁的只读路由；零构建、零运行时依赖。",
+  "version": "0.3.0",
   "type": "module",
   "main": "lib/index.js",
   "exports": {
@@ -37,7 +37,8 @@
     "react": "^18.2.0"
   },
   "scripts": {
-    "test": "node --test test/*.test.mjs"
+    "test": "node --test test/*.test.mjs",
+    "test:print": "node test/print.browser.mjs"
   },
   "repository": {
     "type": "git",
