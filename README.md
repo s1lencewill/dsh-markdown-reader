@@ -1,3 +1,5 @@
+![dsh-markdown-reader 功能示意图：Markdown → 独立阅读看板 → 打印 / PDF](docs/reader-overview.png)
+
 # `@s1lencewill/dsh-markdown-reader`
 
 [简体中文](README.md) | [English](README_EN.md)
