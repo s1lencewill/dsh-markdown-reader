@@ -88,7 +88,7 @@ DSH Web GUI 的全屏 Markdown 阅读器插件：一个双面（host + client）
 标准方式（要求本机 PATH 有 pnpm）：
 
 ```sh
-dsh plugin --profile web add link:G:/hanako/dsh_plu/dsh-markdown-reader
+dsh plugin --profile web add link:/absolute/path/to/dsh-markdown-reader
 ```
 
 之后重启 `dsh web` 进程并刷新页面。`dsh plugin` 会按 `dsh.bundle.patch`
@@ -96,10 +96,9 @@ dsh plugin --profile web add link:G:/hanako/dsh_plu/dsh-markdown-reader
 
 无 pnpm 的手工方式：
 
-1. 将本目录链接/复制到 profile 的 node_modules：
-   `C:\Users\yxh\.dsh\profiles\web\node_modules\@s1lencewill\dsh-markdown-reader`
+1. 将本目录链接/复制到 profile 的 `node_modules/@s1lencewill/dsh-markdown-reader`。
    （目录联接 `mklink /J` 可让后续源码改动即时生效）
-2. 在 `C:\Users\yxh\.dsh\profiles\web\package.json` 中：
+2. 在该 profile 的 `package.json` 中：
    - `dependencies` 加入 `"@s1lencewill/dsh-markdown-reader": "link:..."`（或任意占位）
    - `dsh.profile.bundles` 追加 `"@s1lencewill/dsh-markdown-reader"`
 3. 重启 DSH，刷新页面。

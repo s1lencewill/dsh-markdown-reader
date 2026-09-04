@@ -101,7 +101,7 @@ of silently printing incomplete content. No server-side PDF converter or documen
 Standard installation (requires `pnpm` on `PATH`):
 
 ```sh
-dsh plugin --profile web add link:G:/hanako/dsh_plu/dsh-markdown-reader
+dsh plugin --profile web add link:/absolute/path/to/dsh-markdown-reader
 ```
 
 Restart the `dsh web` process and refresh the page. `dsh plugin` uses the
@@ -110,10 +110,10 @@ Restart the `dsh web` process and refresh the page. `dsh plugin` uses the
 
 Manual installation without pnpm:
 
-1. Link or copy this directory to the profile's `node_modules`, for example:
-   `C:\Users\yxh\.dsh\profiles\web\node_modules\@s1lencewill\dsh-markdown-reader`.
+1. Link or copy this directory to the profile's
+   `node_modules/@s1lencewill/dsh-markdown-reader` location.
    A Windows directory junction (`mklink /J`) makes source updates immediately visible.
-2. In `C:\Users\yxh\.dsh\profiles\web\package.json`:
+2. In that profile's `package.json`:
    - add `"@s1lencewill/dsh-markdown-reader": "link:..."` under `dependencies`
    - append `"@s1lencewill/dsh-markdown-reader"` to `dsh.profile.bundles`
 3. Restart DSH and refresh the page.
