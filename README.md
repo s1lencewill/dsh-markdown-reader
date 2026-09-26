@@ -85,6 +85,8 @@ DSH Web GUI 的全屏 Markdown 阅读器插件：一个双面（host + client）
 
 ## 安装
 
+要求 **DSH ≥ 0.1.7-rc.2**（见「版本兼容」；`sessions` 服务的形状与批量投递方式都以此为准）。
+
 标准方式（要求本机 PATH 有 pnpm）：
 
 ```sh
@@ -135,16 +137,32 @@ vendor/mermaid/ Mermaid 渲染器（已随包分发，v11.16.1）
 
 ### 客户端 bundle 契约
 
-DSH 的 client-modules 会把 `exports["./client"]` 指向的文件原样提供到
-`/plugins/@s1lencewill/dsh-markdown-reader/client.js`（路径与模块 ID 均来自 npm
-包名；`cordis.patch.yml` 中的 `id` 仅用于 Cordis 配置）。文件必须自注册：
+`exports["./client"]` 指向的文件由 DSH 的 client-modules 通过其 `/plugins` 路由分发；
+0.1.7-rc.2 起该路由改为**批量（batch）投递**：boot 清单把多个插件的
+`<id>/client.js` 拼成一条 `/plugins/??<id>/client.js,<id>/client.js,…` 请求，
+单条目路径 `/plugins/<id>/client.js` 不再是对外契约。模块 ID 始终等于 npm 包名
+（`cordis.patch.yml` 里的 `id` 只用于 Cordis 配置）。文件必须自注册：
 
 ```js
 window.__ModuleLoader__.load({ id: '<包名>', factory: (require) => api })
 ```
 
-`factory` 的返回值即模块导出（`{inject, apply}`）。本仓库无构建步骤：源码即产物，
-`lib/client.cjs` 同时充当 Node 测试入口（纯函数导出）。
+`factory` 的返回值即模块导出（`{inject, apply}`）。`dsh.client.inject` 只允许
+列出**确实存在于 boot 图**的模块 ID（悬空边会被新版 client-modules 静默跳过，
+不会报错，但也没有任何作用）：本插件只需要会话服务，因此
+inject `@deepseek-ai/dsh-api-session-controller`（`sessions` 服务的提供者）。
+
+### 版本兼容
+
+- 声明 `dsh.engines.dsh = ">=0.1.7-rc.2"`（该版本起 `sessions` 服务与批量投递才存在）。
+- 客户端同时兼容两种 `sessions.list` 快照：
+  - 旧式 `{ current, byId }`（≤ 0.1.6-rc.x）——`current` 指明当前会话；
+  - 新式 `{ ids, byId, phase, projectionsBySession }`（≥ 0.1.7-rc.2）——**没有
+    `current` 字段**，当前会话由 `retainedBy.mainView > 0` 标记；
+  
+  解析逻辑集中在纯函数 `pickWorkspaceRoot()`（`test/compat.test.mjs` 覆盖两种形状）。
+
+本仓库无构建步骤：源码即产物，`lib/client.cjs` 同时充当 Node 测试入口（纯函数导出）。
 
 ## Mermaid
 

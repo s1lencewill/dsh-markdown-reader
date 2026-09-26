@@ -98,6 +98,9 @@ of silently printing incomplete content. No server-side PDF converter or documen
 
 ## Installation
 
+Requires **DSH ≥ 0.1.7-rc.2** (see “Version compatibility” — the `sessions` service shape
+and the batched client delivery both start there).
+
 Standard installation (requires `pnpm` on `PATH`):
 
 ```sh
@@ -151,18 +154,36 @@ mailto, anchors, and safe relative paths; `data:` and `javascript:` URLs are dis
 
 ### Client bundle contract
 
-DSH client-modules serves the file referenced by `exports["./client"]` at
-`/plugins/@s1lencewill/dsh-markdown-reader/client.js`. Both the URL and module ID derive
-from the npm package name; the `id` in `cordis.patch.yml` is only Cordis configuration.
-The file registers itself with:
+DSH client-modules serves the file referenced by `exports["./client"]` through its
+`/plugins` route. Since 0.1.7-rc.2 that route is a **batched** delivery: the boot manifest
+concatenates several plugins' `<id>/client.js` into one request
+(`/plugins/??<id>/client.js,<id>/client.js,…`), so the single-entry path
+`/plugins/<id>/client.js` is no longer a public contract. The module ID always equals the
+npm package name (the `id` in `cordis.patch.yml` is only Cordis configuration). The file
+registers itself with:
 
 ```js
 window.__ModuleLoader__.load({ id: '<package-name>', factory: (require) => api })
 ```
 
-The factory return value is the module export (`{inject, apply}`). There is no build
-step: source is the shipped artifact. `lib/client.cjs` also exports pure functions for
-Node-based tests.
+The factory return value is the module export (`{inject, apply}`). `dsh.client.inject` may
+only list module IDs that actually exist in the boot graph — a dangling edge is silently
+skipped by client-modules (no error, no effect). This plugin only needs the session
+service, so it injects `@deepseek-ai/dsh-api-session-controller` (the `sessions` provider).
+
+### Version compatibility
+
+- `dsh.engines.dsh = ">=0.1.7-rc.2"` (the `sessions` service and batched delivery start there).
+- The client accepts both `sessions.list` snapshot shapes:
+  - legacy `{ current, byId }` (≤ 0.1.6-rc.x), where `current` names the active session;
+  - current `{ ids, byId, phase, projectionsBySession }` (≥ 0.1.7-rc.2), which has **no
+    `current` field** — the active session is the one with `retainedBy.mainView > 0`.
+
+  Both are handled by the pure `pickWorkspaceRoot()` helper (covered by
+  `test/compat.test.mjs`).
+
+There is no build step: source is the shipped artifact. `lib/client.cjs` also exports pure
+functions for Node-based tests.
 
 ## Mermaid
 

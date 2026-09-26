@@ -1,7 +1,7 @@
 {
   "name": "@s1lencewill/dsh-markdown-reader",
   "description": "DSH Web GUI 全屏 Markdown 阅读器插件：GFM、KaTeX、Mermaid、目录与阅读进度、外部文件变更同步、图片/代码/表格/长章节增强，以及打印与另存 PDF。工作区门禁的只读路由；零构建、零运行时依赖。",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "type": "module",
   "main": "lib/index.js",
   "exports": {
@@ -19,21 +19,20 @@
     "LICENSE"
   ],
   "dsh": {
+    "engines": {
+      "dsh": ">=0.1.7-rc.2"
+    },
     "bundle": {
       "patch": "./cordis.patch.yml"
     },
     "client": {
       "inject": [
-        "@deepseek-ai/dsh-client-runtime"
+        "@deepseek-ai/dsh-api-session-controller"
       ],
       "platform": "web"
     }
   },
   "peerDependencies": {
-    "@deepseek-ai/dsh-client-runtime": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-host-webserver": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-system-prompt": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-workspace": "^0.1.0-rc.6",
     "react": "^18.2.0"
   },
   "scripts": {

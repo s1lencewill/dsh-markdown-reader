@@ -28,8 +28,15 @@ test('npm repository metadata points at the public repository', () => {
   assert.equal(packageJson.bugs?.url, 'https://github.com/s1lencewill/dsh-markdown-reader/issues')
 })
 
-test('README documents the runtime client route derived from the npm package name', async () => {
+test('README documents the client bundle contract for the current delivery scheme', async () => {
   const readme = await readFile(`${root}/README.md`, 'utf8')
-  assert.match(readme, /\/plugins\/@s1lencewill\/dsh-markdown-reader\/client\.js/)
+  const readmeEn = await readFile(`${root}/README_EN.md`, 'utf8')
+  for (const text of [readme, readmeEn]) {
+    assert.match(text, /__ModuleLoader__\.load/)
+    // 0.1.7-rc.2 delivers client bundles in batches; the docs must say so.
+    assert.match(text, /batch|批量/)
+  }
+  // The retired single-entry route and the retired package scope stay out.
   assert.doesNotMatch(readme, /\/plugins\/ui-dsh-markdown-reader\/client\.js/)
+  assert.doesNotMatch(readme, /@linxin666\/dsh-markdown-reader/)
 })
