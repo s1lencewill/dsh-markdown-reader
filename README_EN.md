@@ -98,6 +98,8 @@ of silently printing incomplete content. No server-side PDF converter or documen
 
 ## Installation
 
+Desktop windows reserve space above the reader for the title bar, and the toolbar wraps in narrower windows. Regular browsers use the full viewport.
+
 Requires **DSH ≥ 0.1.7-rc.2** (see “Version compatibility” — the `sessions` service shape
 and the batched client delivery both start there).
 
