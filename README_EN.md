@@ -17,7 +17,9 @@ and no changes to DSH source code.
 - **Outline and scroll tracking**: extracts headings into a deduplicated,
   GitHub-style outline, highlights the active section, and supports smooth navigation
 - **KaTeX math**: inline `$…$` and `\(…\)`, plus display `$$…$$` and `\[…\]`;
-  all resources are bundled under `vendor/katex/` for fully offline use
+  all resources are bundled under `vendor/katex/` for fully offline use. Failed asset
+  loads retry automatically, and readiness survives client reloads. After retries
+  are exhausted, the reader's refresh button starts another loading attempt
 - **Mermaid pipeline**: loads the bundled v11.16.1 renderer on demand, follows
   the Web GUI light/dark theme, and falls back cleanly to source code if unavailable
 - **Relative images**: resolves `![…](img.png)` against the current document and
