@@ -90,7 +90,17 @@ DSH Web GUI 的全屏 Markdown 阅读器插件：一个双面（host + client）
 
 要求 **DSH ≥ 0.1.7-rc.2**（见「版本兼容」；`sessions` 服务的形状与批量投递方式都以此为准）。
 
-标准方式（要求本机 PATH 有 pnpm）：
+npm 安装（推荐，适用于已发布版本；要求本机 PATH 有 pnpm）：
+
+```sh
+dsh plugin --profile web add @s1lencewill/dsh-markdown-reader@0.4.2
+```
+
+桌面端请将 `web` 换为实际 profile 名（通常为 `desktop`），或从市场选择 npm 安装。
+npm 包已包含宿主端、客户端及 KaTeX / Mermaid 资源，安装时无需编译或 Git / SSH 下载。
+市场会通过包的 `repository` 字段自动关联 npm 包，目录数据更新后显示 npm 安装来源。
+
+本地开发安装：
 
 ```sh
 dsh plugin --profile web add link:/absolute/path/to/dsh-markdown-reader

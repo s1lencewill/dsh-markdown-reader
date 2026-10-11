@@ -105,7 +105,19 @@ Desktop windows reserve space above the reader for the title bar, and the toolba
 Requires **DSH ≥ 0.1.7-rc.2** (see “Version compatibility” — the `sessions` service shape
 and the batched client delivery both start there).
 
-Standard installation (requires `pnpm` on `PATH`):
+npm installation (recommended for published versions; requires `pnpm` on `PATH`):
+
+```sh
+dsh plugin --profile web add @s1lencewill/dsh-markdown-reader@0.4.2
+```
+
+For desktop, replace `web` with the actual profile name (usually `desktop`), or choose
+the npm installation in the market. The package includes the host, client, and all
+KaTeX / Mermaid assets; installation needs no compilation or Git / SSH download.
+The market associates the npm package using its `repository` field and switches its
+install source once the catalog data is refreshed.
+
+Local development installation:
 
 ```sh
 dsh plugin --profile web add link:/absolute/path/to/dsh-markdown-reader
